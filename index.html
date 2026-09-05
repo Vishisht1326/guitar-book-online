@@ -1,0 +1,2831 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🎸 Guitar Book</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+margin:0;
+background:#08080d;
+color:white;
+font-family:Arial,sans-serif;
+}
+
+.app{
+max-width:720px;
+margin:auto;
+min-height:100vh;
+padding-bottom:85px;
+}
+
+header{
+padding:22px 16px 10px;
+background:linear-gradient(#1b1b29,#08080d);
+}
+
+header h1{margin:0;font-size:28px}
+header p{margin:5px 0;color:#999}
+
+.page{padding:14px 16px}
+.hidden{display:none!important}
+
+.hero{
+background:linear-gradient(145deg,#1d1d2c,#12121b);
+border:1px solid #30303e;
+border-radius:18px;
+padding:18px;
+margin-bottom:14px;
+}
+
+.hero h2{margin:0 0 6px}
+.muted{color:#999}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:9px;
+}
+
+.card{
+background:#181823;
+border:1px solid #30303e;
+border-radius:17px;
+padding:17px 5px;
+text-align:center;
+color:white;
+text-decoration:none;
+font-size:25px;
+}
+
+.card span{
+display:block;
+font-size:13px;
+margin-top:7px;
+}
+
+.back{
+display:inline-block;
+background:#292936;
+color:white;
+text-decoration:none;
+padding:9px 12px;
+border-radius:10px;
+margin-bottom:10px;
+}
+
+button{
+border:0;
+border-radius:10px;
+padding:10px 13px;
+background:#292936;
+color:white;
+font-size:14px;
+cursor:pointer;
+margin:3px;
+}
+
+.primary{
+background:white;
+color:#08080d;
+font-weight:bold;
+}
+
+input,select,textarea{
+width:100%;
+padding:11px;
+margin:5px 0;
+background:#0d0d14;
+color:white;
+border:1px solid #30303e;
+border-radius:10px;
+font-size:15px;
+}
+
+.panel{
+background:#15151f;
+border:1px solid #30303e;
+border-radius:17px;
+padding:14px;
+margin-bottom:12px;
+}
+
+
+/* CHORD LIBRARY */
+
+.chord-library{
+display:grid;
+gap:10px;
+}
+
+.chord-card{
+background:#15151f;
+border:1px solid #30303e;
+border-radius:16px;
+padding:12px;
+}
+
+.chord-title{
+font-size:20px;
+font-weight:bold;
+}
+
+.chord-diagram{
+display:flex;
+justify-content:center;
+}
+
+.chord-svg{
+width:185px;
+height:195px;
+}
+
+
+/* CHORD BUILDER */
+
+.builder-wrap{
+width:100%;
+display:flex;
+justify-content:center;
+padding:8px 0;
+}
+
+.builder{
+width:100%;
+max-width:360px;
+}
+
+.string-header{
+display:grid;
+grid-template-columns:repeat(6,1fr);
+margin-bottom:4px;
+}
+
+.string-header div{
+text-align:center;
+font-size:12px;
+font-weight:bold;
+color:#aaa;
+}
+
+.fret-row{
+display:grid;
+grid-template-columns:repeat(6,1fr);
+height:40px;
+}
+
+.fret-cell{
+position:relative;
+display:flex;
+justify-content:center;
+align-items:center;
+cursor:pointer;
+}
+
+.fret-cell:before{
+content:"";
+position:absolute;
+left:0;
+right:0;
+top:50%;
+height:2px;
+background:#666;
+}
+
+.fret-cell:after{
+content:"";
+position:absolute;
+top:0;
+bottom:0;
+left:50%;
+width:2px;
+background:#666;
+}
+
+.dot{
+width:24px;
+height:24px;
+border-radius:50%;
+border:2px solid #777;
+background:#0d0d14;
+position:relative;
+z-index:2;
+}
+
+.fret-cell.active .dot{
+background:white;
+border-color:white;
+box-shadow:0 0 12px white;
+}
+
+
+/* TABS */
+
+.tab-scroll{
+overflow-x:auto;
+}
+
+.tab-sheet{
+min-width:850px;
+}
+
+.tab-row{
+display:flex;
+align-items:center;
+height:46px;
+}
+
+.string-name{
+width:27px;
+font-weight:bold;
+color:#aaa;
+}
+
+.tab-input{
+width:38px!important;
+height:32px!important;
+margin:0 2px!important;
+padding:2px!important;
+text-align:center;
+background:#0d0d14!important;
+border:1px solid #444!important;
+color:white!important;
+border-radius:6px!important;
+}
+
+.tab-input:focus{
+border-color:white!important;
+outline:none;
+}
+
+
+/* SCALES */
+
+.scale-scroll{
+overflow-x:auto;
+}
+
+.scale-grid{
+min-width:580px;
+display:grid;
+grid-template-columns:32px repeat(12,44px);
+}
+
+.scale-cell{
+height:40px;
+border-right:1px solid #444;
+border-bottom:1px solid #444;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:10px;
+}
+
+.scale-note{
+margin:4px;
+border-radius:50%;
+background:#777;
+cursor:pointer;
+}
+
+.scale-note.selected{
+background:white;
+color:black;
+}
+
+.scale-root{
+background:white;
+color:black;
+}
+
+
+/* LESSONS */
+
+.lesson{
+background:#15151f;
+border:1px solid #30303e;
+border-radius:14px;
+margin-bottom:8px;
+overflow:hidden;
+}
+
+.lesson-head{
+padding:13px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+cursor:pointer;
+}
+
+.lesson-body{
+display:none;
+padding:0 13px 14px;
+color:#bbb;
+line-height:1.5;
+}
+
+.lesson.open .lesson-body{
+display:block;
+}
+
+.done{
+background:white;
+color:black;
+border-radius:50%;
+width:27px;
+height:27px;
+padding:0;
+}
+
+
+/* PROGRESSIONS */
+
+.progression{
+display:flex;
+flex-wrap:wrap;
+gap:5px;
+min-height:40px;
+}
+
+.progression span{
+background:#292936;
+padding:8px 10px;
+border-radius:9px;
+}
+
+
+/* SCANNER */
+
+.preview{
+width:100%;
+max-height:400px;
+object-fit:contain;
+border-radius:13px;
+margin-top:10px;
+display:none;
+}
+
+
+/* PRACTICE */
+
+.bpm{
+text-align:center;
+font-size:42px;
+margin:14px;
+}
+
+
+/* TUNER */
+
+.tuner{
+text-align:center;
+}
+
+.tuner-note{
+font-size:60px;
+font-weight:bold;
+margin:12px;
+}
+
+.meter{
+height:10px;
+background:#292936;
+border-radius:20px;
+position:relative;
+margin:22px 0;
+}
+
+.needle{
+position:absolute;
+width:4px;
+height:25px;
+top:-7px;
+left:50%;
+background:white;
+border-radius:5px;
+}
+
+.center-line{
+position:absolute;
+width:2px;
+height:27px;
+top:-8px;
+left:50%;
+background:#777;
+}
+
+
+nav{
+position:fixed;
+bottom:0;
+left:50%;
+transform:translateX(-50%);
+width:min(720px,100%);
+background:#111119;
+border-top:1px solid #292936;
+display:flex;
+justify-content:space-around;
+padding:9px;
+z-index:20;
+}
+
+nav a{
+color:white;
+text-decoration:none;
+text-align:center;
+font-size:19px;
+}
+
+nav small{
+display:block;
+font-size:9px;
+margin-top:2px;
+}
+
+@media(max-width:430px){
+
+.page{
+padding-left:12px;
+padding-right:12px;
+}
+
+.builder{
+max-width:340px;
+}
+
+.fret-row{
+height:37px;
+}
+
+.dot{
+width:22px;
+height:22px;
+}
+
+.card{
+padding:15px 3px;
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+<h1>🎸 Guitar Book</h1>
+<p>Your personal guitar library</p>
+</header>
+
+
+<!-- HOME -->
+
+<section id="home" class="page">
+
+<div class="hero">
+<h2>Welcome, guitarist 🤘</h2>
+<p class="muted">Learn • Create • Practice • Save</p>
+</div>
+
+<div class="grid">
+
+<a class="card" href="#chords">🎸<span>Chords</span></a>
+
+<a class="card" href="#chord-builder">🛠️<span>Chord Builder</span></a>
+
+<a class="card" href="#tabs">📜<span>Tabs</span></a>
+
+<a class="card" href="#scales">🎼<span>Scales</span></a>
+
+<a class="card" href="#techniques">🔥<span>Techniques</span></a>
+
+<a class="card" href="#theory">📚<span>Theory</span></a>
+
+<a class="card" href="#progressions">🎶<span>Progressions</span></a>
+
+<a class="card" href="#scanner">📸<span>Scan Tab</span></a>
+
+<a class="card" href="#library">💾<span>Library</span></a>
+
+<a class="card" href="#practice">🥁<span>Practice</span></a>
+
+<a class="card" href="#tuner">🎤<span>Tuner</span></a>
+
+</div>
+</section>
+
+
+<!-- CHORDS -->
+
+<section id="chords" class="page hidden">
+
+<a class="back" href="#home">← Home</a>
+
+<div class="hero">
+<h2>🎸 Chord Library</h2>
+<p class="muted">Browse common guitar chords.</p>
+</div>
+
+<input
+id="chordSearch"
+placeholder="Search C, Am, G7..."
+oninput="renderChordLibrary()">
+
+<div id="chordLibrary" class="chord-library"></div>
+
+</section>
+
+
+<!-- CHORD BUILDER -->
+
+<section id="chord-builder" class="page hidden">
+
+<a class="back" href="#home">← Home</a>
+
+<div class="hero">
+<h2>🛠️ Chord Builder</h2>
+
+<p class="muted">
+Build barre chords and normal chords.
+</p>
+</div>
+
+<div class="panel">
+
+<label class="muted">
+Starting fret
+</label>
+
+<input
+id="startingFret"
+type="number"
+min="1"
+max="24"
+value="1"
+oninput="buildChord()">
+
+<input
+id="customChordName"
+placeholder="Name your chord">
+
+<div class="builder-wrap">
+
+<div class="builder">
+
+<div class="string-header">
+<div>E</div>
+<div>A</div>
+<div>D</div>
+<div>G</div>
+<div>B</div>
+<div>e</div>
+</div>
+
+<div id="chordBoard"></div>
+
+</div>
+
+</div>
+
+<p class="muted">
+5 frets shown • Every string can be selected independently.
+</p>
+
+<button
+class="primary"
+onclick="saveCustomChord()">
+💾 Save Chord
+</button>
+
+<button onclick="clearChord()">
+🗑️ Clear
+</button>
+
+</div>
+
+</section>
+
+
+<!-- TABS -->
+
+<section id="tabs" class="page hidden">
+
+<a class="back" href="#home">← Home</a>
+
+<div class="hero">
+<h2>📜 Tab Writer</h2>
+
+<p class="muted">
+Every box is independent — enter notes on multiple strings at the same time.
+</p>
+</div>
+
+<div class="panel">
+
+<input
+id="tabName"
+placeholder="Name your tab">
+
+<div class="tab-scroll">
+
+<div
+class="tab-sheet"
+id="tabBoard">
+</div>
+
+</div>
+
+<br>
+
+<button
+class="primary"
+onclick="saveTab()">
+💾 Save Tab
+</button>
+
+<button onclick="clearTab()">
+🗑️ Clear
+</button>
+
+</div>
+
+</section>
+
+
+<!-- SCALES -->
+
+<section id="scales" class="page hidden">
+
+<a class="back" href="#home">← Home</a>
+
+<div class="hero">
+<h2>🎼 Interactive Scales</h2>
+
+<p class="muted">
+Choose a root and scale.
+</p>
+</div>
+
+<div class="panel">
+
+<select
+id="scaleRoot"
+onchange="drawScale()">
+</select>
+
+<select
+id="scaleType"
+onchange="drawScale()">
+
+<option value="major">
+Major
+</option>
+
+<option value="minor">
+Natural Minor
+</option>
+
+<option value="pentatonic">
+Minor Pentatonic
+</option>
+
+<option value="blues">
+Blues
+</option>
+
+</select>
+
+<div class="scale-scroll">
+
+<div id="scaleBoard"></div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- TECHNIQUES -->
+
+<section id="techniques" class="page hidden">
+
+<a class="back" href="#home">← Home</a>
+
+<div class="hero">
+<h2>🔥 Techniques</h2>
+
+<p class="muted">
+Tap a technique to learn it.
+</p>
+</div>
+
+<div id="techniqueList"></div>
+
+</section>
+
+
+<!-- THEORY -->
+
+<section id="theory" class="page hidden">
+
+<a class="back" href="#home">← Home</a>
+
+<div class="hero">
+<h2>📚 Guitar Theory</h2>
+
+<p class="muted">
+Tap a topic to learn it.
+</p>
+</div>
+
+<div id="theoryList"></div>
+
+</section>
+
+
+<!-- PROGRESSIONS -->
+
+<section id="progressions" class="page hidden">
+
+<a class="back" href="#home">← Home</a>
+
+<div class="hero">
+<h2>🎶 Progression Builder</h2>
+
+<p class="muted">
+Build your own chord progression.
+</p>
+</div>
+
+<div class="panel">
+
+<select id="progRoot"></select>
+
+<div id="degreeButtons"></div>
+
+<h3>Your progression</h3>
+
+<div
+id="progDisplay"
+class="progression">
+</div>
+
+<br>
+
+<button
+class="primary"
+onclick="saveProgression()">
+💾 Save
+</button>
+
+<button onclick="clearProgression()">
+🗑️ Clear
+</button>
+
+</div>
+
+</section>
+
+
+<!-- SCANNER -->
+
+<section id="scanner" class="page hidden">
+
+<a class="back" href="#home">← Home</a>
+
+<div class="hero">
+<h2>📸 Tab Scanner</h2>
+
+<p class="muted">
+Take a picture of a tab or choose an image.
+</p>
+</div>
+
+<div class="panel">
+
+<input
+type="file"
+accept="image/*"
+capture="environment"
+onchange="previewScan(event)">
+
+<img
+id="scanPreview"
+class="preview">
+
+<p
+id="scanInfo"
+class="muted">
+</p>
+
+<a
+id="scanEditor"
+class="back hidden"
+href="#tabs">
+✏️ Recreate in Tab Writer
+</a>
+
+</div>
+
+</section>
+
+
+<!-- LIBRARY -->
+
+<section id="library" class="page hidden">
+
+<a class="back" href="#home">← Home</a>
+
+<div class="hero">
+<h2>💾 My Library</h2>
+
+<p class="muted">
+Your saved creations.
+</p>
+</div>
+
+<div id="libraryContent"></div>
+
+</section>
+
+
+<!-- PRACTICE -->
+
+<section id="practice" class="page hidden">
+
+<a class="back" href="#home">← Home</a>
+
+<div class="hero">
+<h2>🥁 Practice</h2>
+
+<p class="muted">
+Built-in metronome.
+</p>
+</div>
+
+<div class="panel">
+
+<div
+id="bpm"
+class="bpm">
+90 BPM
+</div>
+
+<button onclick="changeBpm(-5)">
+−5
+</button>
+
+<button onclick="changeBpm(5)">
++5
+</button>
+
+<button
+id="metroBtn"
+class="primary"
+onclick="toggleMetro()">
+▶ Start
+</button>
+
+</div>
+
+</section>
+
+
+<!-- TUNER -->
+
+<section id="tuner" class="page hidden">
+
+<a class="back" href="#home">← Home</a>
+
+<div class="hero">
+<h2>🎤 Guitar Tuner</h2>
+
+<p class="muted">
+Allow microphone access and play a string.
+</p>
+</div>
+
+<div class="panel tuner">
+
+<div
+id="tunerNote"
+class="tuner-note">
+--
+</div>
+
+<div
+id="tunerFreq"
+class="muted">
+0 Hz
+</div>
+
+<div class="meter">
+
+<div class="center-line"></div>
+
+<div
+id="needle"
+class="needle">
+</div>
+
+</div>
+
+<button
+class="primary"
+onclick="startTuner()">
+🎤 Start
+</button>
+
+<button onclick="stopTuner()">
+⏹ Stop
+</button>
+
+</div>
+
+</section>
+
+
+<nav>
+
+<a href="#home">
+🏠
+<small>Home</small>
+</a>
+
+<a href="#chords">
+🎸
+<small>Chords</small>
+</a>
+
+<a href="#tabs">
+📜
+<small>Tabs</small>
+</a>
+
+<a href="#library">
+💾
+<small>Library</small>
+</a>
+
+</nav>
+
+</div>
+
+
+<script>
+
+/* DATABASE */
+
+let db=
+JSON.parse(
+localStorage.getItem("GuitarBookDB")
+)
+||
+{
+chords:[],
+tabs:[],
+progressions:[],
+done:[]
+};
+
+function saveDB(){
+
+localStorage.setItem(
+"GuitarBookDB",
+JSON.stringify(db)
+);
+
+}
+
+
+/* CHORD LIBRARY */
+
+const chordShapes={
+
+"C":["x",3,2,0,1,0],
+"Am":["x",0,2,2,1,0],
+"A":["x",0,2,2,2,0],
+"A7":["x",0,2,0,2,0],
+"Am7":["x",0,2,0,1,0],
+"B":["x",2,4,4,4,2],
+"Bm":["x",2,4,4,3,2],
+"B7":["x",2,1,2,0,2],
+"C7":["x",3,2,3,1,0],
+"Cmaj7":["x",3,2,0,0,0],
+"Cm":["x",3,5,5,4,3],
+"D":["x","x",0,2,3,2],
+"Dm":["x","x",0,2,3,1],
+"D7":["x","x",0,2,1,2],
+"Dmaj7":["x","x",0,2,2,2],
+"E":[0,2,2,1,0,0],
+"Em":[0,2,2,0,0,0],
+"E7":[0,2,0,1,0,0],
+"Emaj7":[0,2,1,1,0,0],
+"F":[1,3,3,2,1,1],
+"Fm":[1,3,3,1,1,1],
+"F7":[1,3,1,2,1,1],
+"G":[3,2,0,0,0,3],
+"Gm":[3,5,5,3,3,3],
+"G7":[3,2,0,0,0,1],
+"Gmaj7":[3,2,0,0,0,2],
+"E5":[0,2,2,"x","x","x"],
+"A5":["x",0,2,2,"x","x"]
+
+};
+
+
+function chordSVG(shape){
+
+let svg=`
+
+<svg
+class="chord-svg"
+viewBox="0 0 210 220"
+xmlns="http://www.w3.org/2000/svg">
+
+<text
+x="105"
+y="20"
+text-anchor="middle"
+fill="white"
+font-size="13">
+E A D G B e
+</text>
+`;
+
+for(
+let s=0;
+s<6;
+s++
+){
+
+let x=40+s*25;
+
+svg+=`
+
+<line
+x1="${x}"
+y1="50"
+x2="${x}"
+y2="180"
+stroke="#aaa"
+stroke-width="2"/>
+`;
+
+}
+
+for(
+let f=0;
+f<=5;
+f++
+){
+
+let y=50+f*26;
+
+svg+=`
+
+<line
+x1="40"
+y1="${y}"
+x2="165"
+y2="${y}"
+stroke="#777"
+stroke-width="${f===0?4:2}"/>
+`;
+
+}
+
+shape.forEach(
+(v,s)=>{
+
+let x=40+s*25;
+
+if(v==="x"){
+
+svg+=`
+
+<text
+x="${x}"
+y="42"
+text-anchor="middle"
+fill="#ff7777"
+font-size="15">
+X
+</text>
+`;
+
+}
+
+else if(v===0){
+
+svg+=`
+
+<circle
+cx="${x}"
+cy="40"
+r="6"
+fill="none"
+stroke="white"
+stroke-width="2"/>
+`;
+
+}
+
+else{
+
+let y=63+(v-1)*26;
+
+svg+=`
+
+<circle
+cx="${x}"
+cy="${y}"
+r="9"
+fill="white"/>
+`;
+
+}
+
+});
+
+svg+=`</svg>`;
+
+return svg;
+
+}
+
+
+function renderChordLibrary(){
+
+let q=
+document
+.getElementById("chordSearch")
+.value
+.toLowerCase();
+
+let box=
+document
+.getElementById("chordLibrary");
+
+box.innerHTML="";
+
+Object.keys(chordShapes)
+.filter(
+name=>
+name
+.toLowerCase()
+.includes(q)
+)
+.forEach(
+name=>{
+
+let card=
+document.createElement("div");
+
+card.className=
+"chord-card";
+
+card.innerHTML=`
+
+<div class="chord-title">
+${name}
+</div>
+
+<div class="chord-diagram">
+${chordSVG(
+chordShapes[name]
+)}
+</div>
+`;
+
+box.appendChild(card);
+
+});
+
+}
+
+
+/* =========================
+CHORD BUILDER
+========================= */
+
+/*
+IMPORTANT:
+
+chordSet has 6 independent
+strings.
+
+Example:
+
+[5,5,5,5,5,5]
+
+means all six strings
+are fretted at fret 5.
+
+That means BARRE CHORDS WORK.
+*/
+
+let chordSet=
+Array(6).fill(null);
+
+
+function getStartingFret(){
+
+let value=
+parseInt(
+document
+.getElementById(
+"startingFret"
+)
+.value
+);
+
+if(
+isNaN(value) ||
+value<1
+){
+
+value=1;
+
+}
+
+if(value>24){
+
+value=24;
+
+}
+
+return value;
+
+}
+
+
+function buildChord(){
+
+const board=
+document.getElementById(
+"chordBoard"
+);
+
+board.innerHTML="";
+
+const start=
+getStartingFret();
+
+
+for(
+let row=0;
+row<5;
+row++
+){
+
+const fret=
+start+row;
+
+const line=
+document.createElement(
+"div"
+);
+
+line.className=
+"fret-row";
+
+
+for(
+let string=0;
+string<6;
+string++
+){
+
+const cell=
+document.createElement(
+"div"
+);
+
+cell.className=
+"fret-cell";
+
+
+/*
+Each string checks its own
+position.
+
+Therefore ALL SIX strings
+can use the same fret.
+*/
+
+if(
+chordSet[string]===fret
+){
+
+cell.classList.add(
+"active"
+);
+
+}
+
+
+const dot=
+document.createElement(
+"div"
+);
+
+dot.className="dot";
+
+cell.appendChild(dot);
+
+
+cell.onclick=()=>{
+
+if(
+chordSet[string]===fret
+){
+
+chordSet[string]=null;
+
+}else{
+
+/*
+This does NOT clear other
+strings.
+
+So:
+
+E = 5
+A = 5
+D = 5
+G = 5
+B = 5
+e = 5
+
+is completely valid.
+*/
+
+chordSet[string]=fret;
+
+}
+
+buildChord();
+
+};
+
+
+line.appendChild(cell);
+
+}
+
+board.appendChild(line);
+
+}
+
+}
+
+
+function clearChord(){
+
+chordSet=
+Array(6).fill(null);
+
+document.getElementById(
+"customChordName"
+).value="";
+
+buildChord();
+
+}
+
+
+function saveCustomChord(){
+
+const name=
+document
+.getElementById(
+"customChordName"
+)
+.value
+.trim();
+
+if(!name){
+
+alert(
+"Give your chord a name 🎸"
+);
+
+return;
+
+}
+
+db.chords.push({
+
+name:name,
+
+startingFret:
+getStartingFret(),
+
+positions:
+[...chordSet]
+
+});
+
+saveDB();
+
+alert(
+"🎸 Chord saved!"
+);
+
+renderLibrary();
+
+}
+
+
+/* =========================
+TAB BUILDER
+========================= */
+
+let tabData=
+Array.from(
+{length:6},
+()=>Array(20).fill("")
+);
+
+
+function makeTabs(){
+
+const board=
+document.getElementById(
+"tabBoard"
+);
+
+board.innerHTML="";
+
+const strings=
+["e","B","G","D","A","E"];
+
+
+strings.forEach(
+(name,row)=>{
+
+const line=
+document.createElement(
+"div"
+);
+
+line.className=
+"tab-row";
+
+
+const label=
+document.createElement(
+"div"
+);
+
+label.className=
+"string-name";
+
+label.textContent=
+name;
+
+line.appendChild(label);
+
+
+for(
+let i=0;
+i<20;
+i++
+){
+
+const input=
+document.createElement(
+"input"
+);
+
+input.className=
+"tab-input";
+
+input.inputMode=
+"numeric";
+
+input.maxLength=2;
+
+input.value=
+tabData[row][i];
+
+
+input.addEventListener(
+"input",
+function(){
+
+this.value=
+this.value
+.replace(
+/[^0-9]/g,
+""
+)
+.slice(0,2);
+
+tabData[row][i]=
+this.value;
+
+}
+);
+
+line.appendChild(input);
+
+}
+
+board.appendChild(line);
+
+});
+
+}
+
+
+function clearTab(){
+
+tabData=
+Array.from(
+{length:6},
+()=>Array(20).fill("")
+);
+
+document.getElementById(
+"tabName"
+).value="";
+
+makeTabs();
+
+}
+
+
+function saveTab(){
+
+const name=
+document
+.getElementById(
+"tabName"
+)
+.value
+.trim();
+
+if(!name){
+
+alert(
+"Name your tab first 📜"
+);
+
+return;
+
+}
+
+db.tabs.push({
+
+name:name,
+
+data:
+tabData.map(
+row=>[...row]
+)
+
+});
+
+saveDB();
+
+alert(
+"📜 Tab saved!"
+);
+
+renderLibrary();
+
+}
+
+
+/* =========================
+SCALES
+========================= */
+
+const notes=[
+"C","C#","D","D#","E","F",
+"F#","G","G#","A","A#","B"
+];
+
+const scalePatterns={
+
+major:[0,2,4,5,7,9,11],
+
+minor:[0,2,3,5,7,8,10],
+
+pentatonic:[0,3,5,7,10],
+
+blues:[0,3,5,6,7,10]
+
+};
+
+const tuning=[
+4,9,2,7,11,4
+];
+
+
+function setupScale(){
+
+const select=
+document.getElementById(
+"scaleRoot"
+);
+
+notes.forEach(
+note=>{
+
+select.innerHTML+=
+`<option>${note}</option>`;
+
+});
+
+}
+
+
+function drawScale(){
+
+const root=
+notes.indexOf(
+document.getElementById(
+"scaleRoot"
+).value
+);
+
+const type=
+document.getElementById(
+"scaleType"
+).value;
+
+const allowed=
+scalePatterns[type]
+.map(
+n=>(root+n)%12
+);
+
+const grid=
+document.createElement(
+"div"
+);
+
+grid.className=
+"scale-grid";
+
+grid.innerHTML=
+"<div></div>";
+
+
+for(
+let f=0;
+f<12;
+f++
+){
+
+grid.innerHTML+=
+`<div class="scale-cell">
+${f}
+</div>`;
+
+}
+
+
+for(
+let s=0;
+s<6;
+s++
+){
+
+grid.innerHTML+=
+`<div class="scale-cell">
+${["E","A","D","G","B","e"][s]}
+</div>`;
+
+
+for(
+let fret=0;
+fret<12;
+fret++
+){
+
+const note=
+(tuning[s]+fret)%12;
+
+const cell=
+document.createElement(
+"div"
+);
+
+cell.className=
+"scale-cell";
+
+
+if(
+allowed.includes(note)
+){
+
+cell.classList.add(
+"scale-note"
+);
+
+cell.textContent=
+notes[note];
+
+
+if(note===root){
+
+cell.classList.add(
+"scale-root"
+);
+
+}
+
+
+cell.onclick=()=>{
+
+cell.classList.toggle(
+"selected"
+);
+
+};
+
+}
+
+grid.appendChild(cell);
+
+}
+
+}
+
+const board=
+document.getElementById(
+"scaleBoard"
+);
+
+board.innerHTML="";
+
+board.appendChild(grid);
+
+}
+
+
+/* =========================
+TECHNIQUES
+========================= */
+
+const techniques=[
+
+[
+"Alternate Picking",
+"Pick down-up repeatedly. Start slowly and keep every note clean."
+],
+
+[
+"Hammer-On",
+"Pick the first note and hammer another finger onto a higher fret."
+],
+
+[
+"Pull-Off",
+"Pick the higher note and pull the finger away to sound the lower note."
+],
+
+[
+"Bending",
+"Push or pull the string smoothly until you reach the target pitch."
+],
+
+[
+"Vibrato",
+"Move the fretting finger slightly back and forth to create controlled pitch movement."
+],
+
+[
+"Palm Muting",
+"Rest the side of your picking hand lightly near the bridge."
+],
+
+[
+"Tapping",
+"Use a finger from your picking hand to tap notes onto the fretboard."
+],
+
+[
+"Sweep Picking",
+"Use one smooth picking motion across multiple strings."
+],
+["String Skipping",
+ "Skip strings deliberately to create larger intervals and interesting patterns."],
+
+["Hybrid Picking",
+ "Combine pick strokes with your fingers to play strings that are farther apart."],
+
+["Tremolo Picking",
+ "Pick the same note rapidly and evenly. Start slowly and build speed."],
+
+["Legato",
+ "Use hammer-ons and pull-offs to create smooth lines with fewer picked notes."],
+
+["Slides",
+ "Pick a note, then slide your fretting finger to another fret while keeping the string ringing."]
+
+];
+
+
+/* =========================
+   LESSON SYSTEM
+========================= */
+
+function renderLessons(id,data,prefix){
+
+ const box=document.getElementById(id);
+
+ box.innerHTML="";
+
+ data.forEach((item,index)=>{
+
+   const key=prefix+index;
+
+   const completed=db.done.includes(key);
+
+   const lesson=document.createElement("div");
+
+   lesson.className="lesson";
+
+   lesson.innerHTML=`
+     <div class="lesson-head">
+
+       <strong>${item[0]}</strong>
+
+       <button class="done-btn">
+         ${completed ? "✓" : "○"}
+       </button>
+
+     </div>
+
+     <div class="lesson-body">
+
+       <p>${item[1]}</p>
+
+       <hr>
+
+       <b>Practice:</b>
+
+       <p>
+       Start slowly with a metronome.
+       Focus on clean notes and relaxed movement.
+       Increase speed only when you can play it cleanly.
+       </p>
+
+     </div>
+   `;
+
+   const head=
+   lesson.querySelector(".lesson-head");
+
+   const body=
+   lesson.querySelector(".lesson-body");
+
+   const doneBtn=
+   lesson.querySelector(".done-btn");
+
+   head.onclick=()=>{
+
+     lesson.classList.toggle("open");
+
+   };
+
+   doneBtn.onclick=(event)=>{
+
+     event.stopPropagation();
+
+     if(db.done.includes(key)){
+
+       db.done=
+       db.done.filter(x=>x!==key);
+
+     }else{
+
+       db.done.push(key);
+
+     }
+
+     saveDB();
+
+     renderLessons(id,data,prefix);
+
+   };
+
+   box.appendChild(lesson);
+
+ });
+
+}
+
+
+/* =========================
+   THEORY
+========================= */
+
+const theory=[
+
+["Notes on the Guitar",
+"The musical alphabet is A B C D E F G. After G, it repeats at A."],
+
+["Intervals",
+"An interval is the distance between two notes. Intervals are the building blocks of scales and chords."],
+
+["Major Scale",
+"The major scale follows the pattern whole, whole, half, whole, whole, whole, half."],
+
+["Minor Scale",
+"The natural minor scale has its own interval pattern and gives a darker sound."],
+
+["Triads",
+"Triads contain three important notes: root, third and fifth."],
+
+["Seventh Chords",
+"Seventh chords add another chord tone to a basic triad."],
+
+["Keys",
+"A key gives a song a tonal center and a family of related chords."],
+
+["Modes",
+"Modes are different tonal sounds created from the notes of a parent scale."],
+
+["Circle of Fifths",
+"The circle of fifths shows relationships between musical keys."],
+
+["Time Signatures",
+"Time signatures tell you how beats are grouped inside each measure."],
+
+["Rhythm",
+"Rhythm controls when notes are played and how long they last."],
+
+["Reading Tab",
+"Six horizontal lines represent the six guitar strings. Numbers show which frets to play."]
+
+];
+
+
+/* =========================
+   PROGRESSIONS
+========================= */
+
+let progression=[];
+
+const progressionDegrees=[
+"I",
+"ii",
+"iii",
+"IV",
+"V",
+"vi",
+"vii°"
+];
+
+
+function setupProgressions(){
+
+ const root=
+ document.getElementById("progRoot");
+
+ root.innerHTML="";
+
+ notes.forEach(note=>{
+
+   const option=
+   document.createElement("option");
+
+   option.value=note;
+
+   option.textContent=note;
+
+   root.appendChild(option);
+
+ });
+
+ const buttons=
+ document.getElementById("degreeButtons");
+
+ buttons.innerHTML="";
+
+ progressionDegrees.forEach(degree=>{
+
+   const button=
+   document.createElement("button");
+
+   button.textContent=degree;
+
+   button.onclick=()=>{
+
+     progression.push(degree);
+
+     drawProgression();
+
+   };
+
+   buttons.appendChild(button);
+
+ });
+
+}
+
+
+function drawProgression(){
+
+ const root=
+ document.getElementById("progRoot").value;
+
+ const display=
+ document.getElementById("progDisplay");
+
+ display.innerHTML="";
+
+ progression.forEach((degree,index)=>{
+
+   const chord=
+   document.createElement("span");
+
+   chord.style.display="inline-block";
+
+   chord.style.background="#292936";
+
+   chord.style.padding="9px 12px";
+
+   chord.style.borderRadius="10px";
+
+   chord.style.margin="3px";
+
+   chord.textContent=
+   (index+1)+". "+root+" "+degree;
+
+   display.appendChild(chord);
+
+ });
+
+}
+
+
+function clearProgression(){
+
+ progression=[];
+
+ drawProgression();
+
+}
+
+
+function saveProgression(){
+
+ if(progression.length===0){
+
+   alert("Build a progression first 🎶");
+
+   return;
+
+ }
+
+ db.progressions.push({
+
+   root:
+   document.getElementById("progRoot").value,
+
+   degrees:[...progression]
+
+ });
+
+ saveDB();
+
+ renderLibrary();
+
+ alert("🎶 Progression saved!");
+
+}
+
+
+/* =========================
+   SCANNER
+========================= */
+
+function previewScan(event){
+
+ const file=
+ event.target.files[0];
+
+ if(!file)return;
+
+ const reader=
+ new FileReader();
+
+ reader.onload=function(e){
+
+   const preview=
+   document.getElementById("scanPreview");
+
+   preview.src=e.target.result;
+
+   preview.style.display="block";
+
+   document.getElementById("scanInfo").textContent=
+   "Photo loaded! Use the image as a reference and recreate the tab in Tab Writer.";
+
+   document
+   .getElementById("scanEditor")
+   .classList
+   .remove("hidden");
+
+ };
+
+ reader.readAsDataURL(file);
+
+}
+
+
+/* =========================
+   METRONOME
+========================= */
+
+let bpm=90;
+
+let metroRunning=false;
+
+let metroTimer=null;
+
+let audioContext=null;
+
+
+function changeBpm(amount){
+
+ bpm+=amount;
+
+ bpm=Math.max(
+   30,
+   Math.min(240,bpm)
+ );
+
+ document.getElementById("bpm")
+ .textContent=
+ bpm+" BPM";
+
+}
+
+
+function beat(){
+
+ if(!audioContext){
+
+   audioContext=
+   new(
+     window.AudioContext ||
+     window.webkitAudioContext
+   )();
+
+ }
+
+ const oscillator=
+ audioContext.createOscillator();
+
+ const gain=
+ audioContext.createGain();
+
+ oscillator.frequency.value=900;
+
+ gain.gain.value=.12;
+
+ oscillator.connect(gain);
+
+ gain.connect(
+   audioContext.destination
+ );
+
+ oscillator.start();
+
+ oscillator.stop(
+   audioContext.currentTime+.06
+ );
+
+ if(navigator.vibrate){
+
+   navigator.vibrate(25);
+
+ }
+
+}
+
+
+function toggleMetro(){
+
+ const button=
+ document.getElementById("metroBtn");
+
+ if(metroRunning){
+
+   clearInterval(metroTimer);
+
+   metroRunning=false;
+
+   button.textContent=
+   "▶ Start";
+
+ }else{
+
+   beat();
+
+   metroTimer=
+   setInterval(
+     beat,
+     60000/bpm
+   );
+
+   metroRunning=true;
+
+   button.textContent=
+   "⏹ Stop";
+
+ }
+
+}
+
+
+/* =========================
+   TUNER
+========================= */
+
+let tunerStream=null;
+
+let tunerRunning=false;
+
+let tunerContext=null;
+
+let tunerAnalyser=null;
+
+
+function detectFrequency(
+ buffer,
+ sampleRate
+){
+
+ let bestOffset=-1;
+
+ let bestCorrelation=0;
+
+ for(
+   let offset=20;
+   offset<1000;
+   offset++
+ ){
+
+   let correlation=0;
+
+   for(
+     let i=0;
+     i<buffer.length-offset;
+     i+=3
+   ){
+
+     correlation+=
+     Math.abs(
+       buffer[i]-
+       buffer[i+offset]
+     );
+
+   }
+
+   correlation=
+   1-
+   correlation/
+   (buffer.length-offset);
+
+   if(
+     correlation>
+     bestCorrelation
+   ){
+
+     bestCorrelation=
+     correlation;
+
+     bestOffset=
+     offset;
+
+   }
+
+ }
+
+ if(bestOffset<=0){
+
+   return 0;
+
+ }
+
+ return sampleRate/bestOffset;
+
+}
+
+
+function tunerLoop(){
+
+ if(!tunerRunning){
+
+   return;
+
+ }
+
+ const buffer=
+ new Float32Array(
+   tunerAnalyser.fftSize
+ );
+
+ tunerAnalyser
+ .getFloatTimeDomainData(buffer);
+
+ const frequency=
+ detectFrequency(
+   buffer,
+   tunerContext.sampleRate
+ );
+
+ if(
+   frequency>60 &&
+   frequency<1000
+ ){
+
+   const midi=
+   Math.round(
+     69+
+     12*Math.log2(
+       frequency/440
+     )
+   );
+
+   const note=
+   notes[
+     (midi%12+12)%12
+   ];
+
+   const target=
+   440*
+   Math.pow(
+     2,
+     (midi-69)/12
+   );
+
+   const cents=
+   1200*
+   Math.log2(
+     frequency/target
+   );
+
+   document
+   .getElementById("tunerNote")
+   .textContent=note;
+
+   document
+   .getElementById("tunerFreq")
+   .textContent=
+   frequency.toFixed(1)+" Hz";
+
+   document
+   .getElementById("needle")
+   .style.left=
+   Math.max(
+     0,
+     Math.min(
+       100,
+       50+cents
+     )
+   )+"%";
+
+ }
+
+ requestAnimationFrame(
+   tunerLoop
+ );
+
+}
+
+
+async function startTuner(){
+
+ try{
+
+   tunerStream=
+   await navigator
+   .mediaDevices
+   .getUserMedia({
+     audio:true
+   });
+
+   tunerContext=
+   new(
+     window.AudioContext ||
+     window.webkitAudioContext
+   )();
+
+   const source=
+   tunerContext
+   .createMediaStreamSource(
+     tunerStream
+   );
+
+   tunerAnalyser=
+   tunerContext
+   .createAnalyser();
+
+   tunerAnalyser.fftSize=2048;
+
+   source.connect(
+     tunerAnalyser
+   );
+
+   tunerRunning=true;
+
+   tunerLoop();
+
+ }catch(error){
+
+   alert(
+     "Microphone access was blocked. Please allow microphone permission."
+   );
+
+ }
+
+}
+
+
+function stopTuner(){
+
+ tunerRunning=false;
+
+ if(tunerStream){
+
+   tunerStream
+   .getTracks()
+   .forEach(
+     track=>track.stop()
+   );
+
+ }
+
+ document
+ .getElementById("tunerNote")
+ .textContent="--";
+
+ document
+ .getElementById("tunerFreq")
+ .textContent="0 Hz";
+
+}
+
+
+/* =========================
+   LIBRARY
+========================= */
+
+function renderLibrary(){
+
+ const box=
+ document.getElementById(
+   "libraryContent"
+ );
+
+ box.innerHTML="";
+
+ if(
+   !db.chords.length &&
+   !db.tabs.length &&
+   !db.progressions.length
+ ){
+
+   box.innerHTML=`
+   <div class="panel">
+
+   <h3>Nothing saved yet 🎸</h3>
+
+   <p class="muted">
+   Create a chord, tab or progression
+   and it will appear here.
+   </p>
+
+   </div>
+   `;
+
+   return;
+
+ }
+
+
+ /* SAVED CHORDS */
+
+ if(db.chords.length){
+
+   const panel=
+   document.createElement("div");
+
+   panel.className="panel";
+
+   panel.innerHTML=
+   "<h3>🎸 Custom Chords</h3>";
+
+   db.chords.forEach(
+   (chord,index)=>{
+
+     const item=
+     document.createElement("div");
+
+     item.className="item";
+
+     item.innerHTML=`
+
+       <b>${chord.name}</b>
+
+       <button
+       onclick="deleteChord(${index})">
+       Delete
+       </button>
+
+     `;
+
+     panel.appendChild(item);
+
+   });
+
+   box.appendChild(panel);
+
+ }
+
+
+ /* SAVED TABS */
+
+ if(db.tabs.length){
+
+   const panel=
+   document.createElement("div");
+
+   panel.className="panel";
+
+   panel.innerHTML=
+   "<h3>📜 Tabs</h3>";
+
+   db.tabs.forEach(
+   (tab,index)=>{
+
+     const item=
+     document.createElement("div");
+
+     item.className="item";
+
+     item.innerHTML=`
+
+       <b>${tab.name}</b>
+
+       <button
+       onclick="deleteTab(${index})">
+       Delete
+       </button>
+
+     `;
+
+     panel.appendChild(item);
+
+   });
+
+   box.appendChild(panel);
+
+ }
+
+
+ /* SAVED PROGRESSIONS */
+
+ if(db.progressions.length){
+
+   const panel=
+   document.createElement("div");
+
+   panel.className="panel";
+
+   panel.innerHTML=
+   "<h3>🎶 Progressions</h3>";
+
+   db.progressions.forEach(
+   (p,index)=>{
+
+     const item=
+     document.createElement("div");
+
+     item.className="item";
+
+     item.innerHTML=`
+
+       <b>${p.root}</b>
+
+       ${p.degrees.join(" → ")}
+
+       <button
+       onclick="deleteProgression(${index})">
+       Delete
+       </button>
+
+     `;
+
+     panel.appendChild(item);
+
+   });
+
+   box.appendChild(panel);
+
+ }
+
+}
+
+
+function deleteChord(index){
+
+ db.chords.splice(
+   index,
+   1
+ );
+
+ saveDB();
+
+ renderLibrary();
+
+}
+
+
+function deleteTab(index){
+
+ db.tabs.splice(
+   index,
+   1
+ );
+
+ saveDB();
+
+ renderLibrary();
+
+}
+
+
+function deleteProgression(index){
+
+ db.progressions.splice(
+   index,
+   1
+ );
+
+ saveDB();
+
+ renderLibrary();
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+const pages=[
+
+ "home",
+
+ "chords",
+
+ "chord-builder",
+
+ "tabs",
+
+ "scales",
+
+ "techniques",
+
+ "theory",
+
+ "progressions",
+
+ "scanner",
+
+ "library",
+
+ "practice",
+
+ "tuner"
+
+];
+
+
+function showPage(){
+
+ let id=
+ location.hash.slice(1);
+
+ if(!pages.includes(id)){
+
+   id="home";
+
+ }
+
+ pages.forEach(page=>{
+
+   const element=
+   document.getElementById(page);
+
+   if(element){
+
+     element.classList.toggle(
+       "hidden",
+       page!==id
+     );
+
+   }
+
+ });
+
+
+ if(id==="chords"){
+
+   renderChordLibrary();
+
+ }
+
+
+ if(id==="chord-builder"){
+
+   buildChord();
+
+ }
+
+
+ if(id==="tabs"){
+
+   makeTabs();
+
+ }
+
+
+ if(id==="scales"){
+
+   drawScale();
+
+ }
+
+
+ if(id==="library"){
+
+   renderLibrary();
+
+ }
+
+
+ window.scrollTo(
+   0,
+   0
+ );
+
+}
+
+
+window.addEventListener(
+ "hashchange",
+ showPage
+);
+
+
+/* =========================
+   START APP
+========================= */
+
+setupScale();
+
+setupProgressions();
+
+buildChord();
+
+makeTabs();
+
+renderChordLibrary();
+
+renderLessons(
+ "techniqueList",
+ techniques,
+ "tech"
+);
+
+renderLessons(
+ "theoryList",
+ theory,
+ "theory"
+);
+
+renderLibrary();
+
+showPage();
+
+</script>
+
+</body>
+</html>
