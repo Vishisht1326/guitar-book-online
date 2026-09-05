@@ -1,4 +1,4 @@
-name: Build Guitar Book APK
+name: Guitar Book Online
 
 on:
   workflow_dispatch:
@@ -21,7 +21,8 @@ jobs:
 
       - name: Prepare web files
         run: |
-          mkdir -p www
+          rm -rf www
+          mkdir www
           cp index.html script.js style.css www/
 
       - name: Add Android
@@ -31,7 +32,7 @@ jobs:
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
